@@ -1,4 +1,4 @@
-#Particle Animation 
+##Particle Animation 
 
 This is a demonstration of a web animation using the particle.js library. Learn more about how it works [here](https://vincentgarreau.com/particles.js/#default).
 
