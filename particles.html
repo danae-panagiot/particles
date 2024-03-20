@@ -1,56 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">    
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-        }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body,
+    html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 0;
-        }
+    }
 
-        #startButton {
-            background-color: red;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            z-index: 1;
-        }
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+    }
 
-        #startButton:hover {
-            background-color: #45a049; /* Darker green on hover */
-        }
+    #startButton {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background-color: red;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        border: none;
+        outline: none;
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3); 
+        transition: all 0.3s ease-in-out;
+    }
 
-        #countdown {
-            font-size: 20px;
-            color: black;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1;
-        }
+    #startButton::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 300%;
+        height: 300%;
+        background-color: rgba(255, 255, 255, 0.2);
+        transition: all 0.5s ease-in-out;
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(0);
+    }
 
-        /* #particles-js {
+    #startButton:hover {
+        background-color: #eb6f6f; 
+        transform: scale(1.1); 
+    }
+    /* #startButton:hover::before {
+        transform: translate(-50%, -50%) scale(1);
+    } */
+
+    #startButton span {
+        position: relative;
+        z-index: 1;
+    }
+
+    #countdown {
+        font-size: 48px;
+        font-weight: bold;
+        color: black;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+    }
+
+    /* #particles-js {
             position: absolute;
             width: 100%;
             height: 100%;
         }  */
-    </style>
+</style>
 
 <body>
     <div id="particles-js"></div>
@@ -64,8 +99,8 @@
             var count = 10;
 
             document.getElementById("startButton").style.display = "none"; // Hide the button
-            
-            var countdownInterval = setInterval(function() {
+
+            var countdownInterval = setInterval(function () {
                 countdownElement.style.display = "block"; // Show the countdown element
                 countdownElement.textContent = count; // Set initial countdown text
                 count--;
@@ -78,157 +113,125 @@
                 }
             }, 1000);
         }
-            
-        function showParticles(){
+
+        function showParticles() {
             document.getElementById("particles-js").style.display = "block";
             particlesJS('particles-js',
-                    { "particles": {
-                    "number": {
-                    "value": 100,
-                    "density": {
-                        "enable": true,
-                        "value_area": 800
-                    }
-                    },
-                    "color": {
-                    "value": ["#ffffff", "#008000", "ffff00" ,"0000ff","ff0000"],
-                    },
-                    "shape": {
-                    "type": ["circle", "polygon", "triangle"],
-                    "stroke": {
-                        "width": 0,
-                        "color": "#000000"
-                    },
-                    "polygon": {
-                        "nb_sides": 5
-                    },
-                    // "image": {
-                    //     "src": "chill-salem.jpg",
-                    //     "width": 100,
-                    //     "height": 100
-                    // }
-                    },
-                    "opacity": {
-                    "value": 0.5,
-                    "random": false,
-                    "anim": {
-                        "enable": false,
-                        "speed": 1,
-                        "opacity_min": 0.1,
-                        "sync": false
-                    }
-                    },
-                    "size": {
-                    "value": 10,
-                    "random": true,
-                    "anim": {
-                        "enable": false,
-                        "speed": 80,
-                        "size_min": 0.1,
-                        "sync": false
-                    }
-                    },
-                    "line_linked": {
-                    "enable": false,
-                    "distance": 300,
-                    "color": "#ffffff",
-                    "opacity": 0.4,
-                    "width": 2
-                    },
-                    "move": {
-                    "enable": true,
-                    "speed": 12,
-                    "direction": "none",
-                    "random": true,
-                    "straight": false,
-                    "out_mode": "out",
-                    "bounce": false,
-                    "attract": {
-                        "enable": false,
-                        "rotateX": 600,
-                        "rotateY": 1200
-                    }
-                    }
-                },
-                "interactivity": {
-                    "detect_on": "canvas",
-                    "events": {
-                    "onhover": {
-                        "enable": true,
-                        "mode": "bubble"
-                    },
-                    "onclick": {
-                        "enable": true,
-                        "mode": "push"
-                    },
-                    "resize": true
-                    },
-                    "modes": {
-                    "grab": {
-                        "distance": 800,
+                {
+                    "particles": {
+                        "number": {
+                            "value": 100,
+                            "density": {
+                                "enable": true,
+                                "value_area": 800
+                            }
+                        },
+                        "color": {
+                            "value": ["#ffffff", "#008000", "ffff00", "0000ff", "ff0000"],
+                        },
+                        "shape": {
+                            "type": ["circle", "polygon", "triangle"],
+                            "stroke": {
+                                "width": 0,
+                                "color": "#000000"
+                            },
+                            "polygon": {
+                                "nb_sides": 5
+                            },
+                            // "image": {
+                            //     "src": "img/github.svg",
+                            //     "width": 100,
+                            //     "height": 100
+                            // }
+                        },
+                        "opacity": {
+                            "value": 0.5,
+                            "random": false,
+                            "anim": {
+                                "enable": false,
+                                "speed": 1,
+                                "opacity_min": 0.1,
+                                "sync": false
+                            }
+                        },
+                        "size": {
+                            "value": 10,
+                            "random": true,
+                            "anim": {
+                                "enable": false,
+                                "speed": 80,
+                                "size_min": 0.1,
+                                "sync": false
+                            }
+                        },
                         "line_linked": {
-                        "opacity": 1
+                            "enable": false,
+                            "distance": 300,
+                            "color": "#ffffff",
+                            "opacity": 0.4,
+                            "width": 2
+                        },
+                        "move": {
+                            "enable": true,
+                            "speed": 12,
+                            "direction": "none",
+                            "random": true,
+                            "straight": false,
+                            "out_mode": "out",
+                            "bounce": false,
+                            "attract": {
+                                "enable": false,
+                                "rotateX": 600,
+                                "rotateY": 1200
+                            }
                         }
                     },
-                    "bubble": {
-                        "distance": 180,
-                        "size": 80,
-                        "duration": 2,
-                        "opacity": 0.8,
-                        "speed": 3
+                    "interactivity": {
+                        "detect_on": "canvas",
+                        "events": {
+                            "onhover": {
+                                "enable": true,
+                                "mode": "bubble"
+                            },
+                            "onclick": {
+                                "enable": true,
+                                "mode": "push"
+                            },
+                            "resize": true
+                        },
+                        "modes": {
+                            "grab": {
+                                "distance": 800,
+                                "line_linked": {
+                                    "opacity": 1
+                                }
+                            },
+                            "bubble": {
+                                "distance": 180,
+                                "size": 80,
+                                "duration": 2,
+                                "opacity": 0.8,
+                                "speed": 3
+                            },
+                            "repulse": {
+                                "distance": 400,
+                                "duration": 0.4
+                            },
+                            "push": {
+                                "particles_nb": 4
+                            },
+                            "remove": {
+                                "particles_nb": 2
+                            }
+                        }
                     },
-                    "repulse": {
-                        "distance": 400,
-                        "duration": 0.4
-                    },
-                    "push": {
-                        "particles_nb": 4
-                    },
-                    "remove": {
-                        "particles_nb": 2
-                    }
-                    }
-                },
-                "retina_detect": true
-              
+                    "retina_detect": true
                 }
-                
 
-            
+
 
             )
         }
-     
-    //not yet implemented my idea is to show the images from the paulov 
-    //bellow the flowing particles :) you can have the images as a type of particles
-    //so they will also flow aroung the canvas but they need to have different speed and 
-    //position in such way they will stay enough time in the screen and not collide 
-    //with each other in an "ugly way". 
-    
-    // function showImages(){
-    //     particlesJS('images-js',{
-    //         "particles": {
-    //             "number":{
-    //                 "value":10,
-    //                 //here the number of our images we want to be shown
-    //             },
-    //             "shape": {
-    //                 "type": "image",
-    //                 "image": {
-    //                     "src": "chill-salem.jpg",
-    //                     "width": 100,
-    //                     "height": 100
-    //                 },
-    //             },
-    //             "move": {
-    //                 "enable": true,
-    //                 "speed": 2,
-    //             }
-
-    //             }
-    //         }
-    //     )
-    // }
 
     </script>
 </body>
