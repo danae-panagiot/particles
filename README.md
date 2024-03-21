@@ -32,7 +32,7 @@ Our background will initially be animated when the button is still on the screen
 
 1. Add the fireworks.
 
-2. Change the background from the animated one to the plain one after the end of the countdown.
+2. Change the background from the animated one to the plain one after the end of the countdown. (__<span style="color:red">FIXED</span>__)
 
 3. Add the images from the Taulov's exit.
 
