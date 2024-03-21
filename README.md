@@ -30,7 +30,7 @@ Our background will initially be animated when the button is still on the screen
 
 ## TO DO'S 
 
-1. Add the fireworks.
+1. Add the fireworks. (__<span style="color:red">FIXED</span>__)
 
 2. Change the background from the animated one to the plain one after the end of the countdown. (__<span style="color:red">FIXED</span>__)
 
