@@ -38,3 +38,11 @@ Our background will initially be animated when the button is still on the screen
 
 4. Find a way to adjust their movement and interaction in the screen.
 
+## Test Environments
+
+Adding different branches for trying out various options.
+
+1. Particles should appear from the beginning (along with the button) until the end of the countdown and the background should be also animated. (__<span style="color:red">FIXED</span>__)
+
+2. Particles should appear from the beggining (along with the button) until the end of the countdown and the background is white? 
+
