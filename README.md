@@ -46,3 +46,4 @@ Adding different branches for trying out various options.
 
 2. Particles should appear from the beggining (along with the button) until the end of the countdown and the background is white? (__<span style="color:red">FIXED</span>__)
 
+3. Images from Taulov appear as animated particles
