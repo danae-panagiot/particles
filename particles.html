@@ -154,6 +154,21 @@
         width: 100%;
         height: 100%;
     }
+
+    .image-container {
+        display: inline-block;
+        margin: 10px;
+        transition: transform 0.3s ease-in-out;
+        cursor: pointer;
+    }
+
+    .image-container:hover {
+        transform: scale(1.1);
+    }
+
+    .image-container.active {
+        transform: scale(1.5);
+    }
 </style>
 
 <body>
@@ -161,7 +176,7 @@
     <div id="particles-container">
         <div id="particles-js"></div>
     </div>
-
+    <div id= "imageGallery"></div>
     <button id="startButton" onclick="startCountdown()">Press Me</button>
     <div id="countdown"></div>
     <div id="fireworks-container"></div>
@@ -170,6 +185,9 @@
     <script src="https://cdn.jsdelivr.net/npm/fireworks-js@latest/dist/fireworks.js"></script>
 
     <script>
+        const images = [
+            
+        ]
         window.onload = function () {
             var particlesContainer = document.getElementById("particles-container");
             function startCountdown() {
@@ -371,6 +389,24 @@
             document.getElementById("startButton").addEventListener("click", startCountdown);
             showParticles(true); // Call showParticles with true to show particles initially
         }
+
+        function loadImages(images) {
+            const gallery = document.getElementById('imageGallery');
+
+            images.forEach((imageSrc, index) => {
+                const img = documenet.createElement('img');
+                img.src = imageSrc;
+                img.classList.add('image-container');
+                img.addEventListener('click', () => {
+                    document.querySelectorAll('.image-container').forEach((image) => {
+                        image.classList.remove('active');
+                    });
+
+                    img.classList.add('active');
+                });
+                gallery.appendChild(img);
+            });
+        } 
     </script>
 
 
