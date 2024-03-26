@@ -27,6 +27,7 @@
 
         animation: animatedBackground 10s ease infinite;
 
+
     }
 
     .white-background {
@@ -153,6 +154,7 @@
         left: 0;
         width: 100%;
         height: 100%;
+        z-index: 2;
     }
 
     .image-container {
@@ -160,15 +162,52 @@
         margin: 10px;
         transition: transform 0.3s ease-in-out;
         cursor: pointer;
+        position: absolute;
+        z-index: 3;
+        max-width: 100px;
+        max-height: 100px;
+        animation: floatAnimation 5s infinite alternate;
     }
+
+    /* .image-container img {
+        max-width: 100px;
+        max-height: 100px;
+        width: auto;
+        height: auto;
+    } */
 
     .image-container:hover {
         transform: scale(1.1);
+        z-index: 3;
     }
 
-    .image-container.active {
-        transform: scale(1.5);
+    .image-container.active {
+        transform: scale(3);
+        z-index: 4;
+        animation: none;
     }
+
+    @keyframes floatAnimation {
+    0% {
+        transform: translate(0, 0);
+    }
+    25% {
+        transform: translate(calc(-10vw), calc(10vh));
+    }
+    50% {
+        transform: translate(calc(10vw), calc(10vh));
+    }
+    75% {
+        transform: translate(calc(10vw), calc(-10vh));
+    }
+    100% {
+        transform: translate(calc(-10vw), calc(-10vh));
+    }
+
+
+}
+
+    
 </style>
 
 <body>
@@ -176,7 +215,7 @@
     <div id="particles-container">
         <div id="particles-js"></div>
     </div>
-    <div id= "imageGallery"></div>
+    <div id="imageGallery"></div>
     <button id="startButton" onclick="startCountdown()">Press Me</button>
     <div id="countdown"></div>
     <div id="fireworks-container"></div>
@@ -186,9 +225,19 @@
 
     <script>
         const images = [
-            
+            'taulov/taulov1.png',
+            'taulov/taulov2.png',
+            'taulov/taulov3.png',
+            'taulov/taulov4.png',
+            'taulov/taulov5.png',
+            'taulov/taulov6.png',
+            'taulov/taulov7.png',
+            'taulov/taulov8.png'
         ]
+
+
         window.onload = function () {
+            var animationDuration = 5;
             var particlesContainer = document.getElementById("particles-container");
             function startCountdown() {
                 var container = document.getElementById("fireworks-container");
@@ -226,17 +275,23 @@
 
                         setTimeout(function () {
                             fireworks.stop();
+                            loadImages(images);
                             taulovMessage.style.display = "none";
 
                             // Resume the particles animation
-                            tsParticles.load("particles-js", {}).then((instance) => {
-                                instance.resume();
-                            });
+                            //does not work
+                            // tsParticles.load("particles-js", {}).then((instance) => {
+                            //     instance.resume();
+                            // });
+                            particlesContainer.style.opacity = 1;
+                            showParticles(true);
                         }, 10000);
                     } else {
                         countdownElement.textContent = count;
                     }
+
                 }, 1000);
+
             }
 
 
@@ -342,11 +397,11 @@
                             "detect_on": "canvas",
                             "events": {
                                 "onhover": {
-                                    "enable": true,
+                                    "enable": false,
                                     "mode": "bubble"
                                 },
                                 "onclick": {
-                                    "enable": true,
+                                    "enable": false,
                                     "mode": "push"
                                 },
                                 "resize": true
@@ -387,26 +442,47 @@
             }
 
             document.getElementById("startButton").addEventListener("click", startCountdown);
-            showParticles(true); // Call showParticles with true to show particles initially
+            showParticles(true); 
         }
 
         function loadImages(images) {
             const gallery = document.getElementById('imageGallery');
 
             images.forEach((imageSrc, index) => {
-                const img = documenet.createElement('img');
+                const img = document.createElement('img');
                 img.src = imageSrc;
                 img.classList.add('image-container');
-                img.addEventListener('click', () => {
+                img.style.left = `${getRandomPosition()}px`;
+                img.style.top = `${getRandomPosition()}px`;
+                img.style.animationDuration = `${getRandomDuration()}s`;
+                img.style.animationDelay = `${getRandomDelay()}s`;
+
+                gallery.appendChild(img);
+            });
+
+            
+            gallery.addEventListener('click', function (event) {
+                if (event.target && event.target.classList.contains('image-container')) {
                     document.querySelectorAll('.image-container').forEach((image) => {
                         image.classList.remove('active');
                     });
-
-                    img.classList.add('active');
-                });
-                gallery.appendChild(img);
+                    event.target.classList.add('active');
+                }
             });
-        } 
+        }
+        function getRandomPosition() {
+            const min = 50;
+            const max = window.innerWidth - 150;
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function getRandomDuration() {
+            return Math.floor(Math.random() * 6) + 5;
+        }
+
+        function getRandomDelay() {
+            return Math.random() * 5;
+        }
     </script>
 
 
