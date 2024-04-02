@@ -1,353 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-    @keyframes animatedBackground {
-        0% {
-            background-position: 0% 50%;
-        }
-
-        25% {
-            background-position: 100% 50%;
-        }
-
-        75% {
-            background-position: 0% 50%;
-        }
-
-        100% {
-            background-color: white;
-        }
-
-    }
-
-    body {
-        background: linear-gradient(to right, #ff0, #0f0, #00f, #800080);
-        /** lego colors***/
-        background-size: 400% 400%;
-
-        animation: animatedBackground 10s ease infinite;
-
-    }
-
-    .white-background {
-        background: white;
-        background-color: white;
-
-    }
-
-    html {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-
-    }
-
-    canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 0;
-
-    }
-
-    #startButton {
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        background-color: red;
-        color: white;
-        font-size: 24px;
-        font-weight: bold;
-        text-align: center;
-        text-decoration: none;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        border: none;
-        outline: none;
-        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
-        transition: all 0.3s ease-in-out;
-        z-index: 2;
-        position: relative;
-
-
-    }
-
-    #startButton::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 300%;
-        height: 300%;
-        background-color: rgba(255, 255, 255, 0.2);
-        transition: all 0.5s ease-in-out;
-        border-radius: 50%;
-        transform: translate(-50%, -50%) scale(0);
-    }
-
-    #startButton:hover {
-        background-color: #eb6f6f;
-        transform: scale(1.1);
-        z-index: 2;
-
-    }
-
-    #startButton span {
-        position: relative;
-        z-index: 2;
-    }
-
-    #countdown {
-        font-size: 48px;
-        font-weight: bold;
-        color: black;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1;
-    }
-
-    #taulovMessage {
-        font-size: 24px;
-        font-weight: bold;
-        color: black;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1;
-        display: none;
-    }
-
-    #fireworks-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0;
-    }
-
-</style>
-
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.10/pixi.min.js"></script>
+</head>
 <body>
-    <div id="particles-js"></div>
-    <button id="startButton" onclick="startCountdown()">Press Me</button>
-    <div id="countdown"></div>
-    <div id="fireworks-container"></div>
-    <div id="taulovMessage" style="display: none;">Taulov is succesfully shut down!</div>
-    <script src="https://cdn.jsdelivr.net/npm/tsparticles-slim@2.0.6/tsparticles.slim.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fireworks-js@latest/dist/fireworks.js"></script>
-
     <script>
+        const app = new PIXI.Application({
+            width: window.innerWidth,
+            height: window.innerHeight,
+            //white background
+            backgroundColor: 0xffffff,
+            resolution: window.devicePixelRatio || 1,
+        });
 
-        function startCountdown() {
-            var container = document.getElementById("fireworks-container");
+        document.body.appendChild(app.view);
 
+        const spriteContainer = new PIXI.Container();
+        app.stage.addChild(spriteContainer);
 
-            const fireworks = new Fireworks(container, {
-                delay: { min: 10, max: 15 },
-                trace: 5,
-                speed: 0.5,
-                particles: 200,
-            });
-            var countdownElement = document.getElementById("countdown");
-            var buttonElement = document.getElementById("startButton");
-            var count = 10;
+        const imagePaths = ['lego-bricks/blue_rect.png', 'lego-bricks/green_circle.png', 'lego-bricks/violet_moon.png', 'lego-bricks/yellow_brick.png'];
+        PIXI.Loader.shared.add(imagePaths).load((loader, resources) => {
+            const sprites = [];
+            for (let i = 0; i < 200; i++) {
+                const textureIndex = Math.floor(Math.random() * imagePaths.length);
+                const sprite = new PIXI.Sprite(resources[imagePaths[textureIndex]].texture);
+                sprite.x = Math.random() * app.renderer.screen.width;
+                sprite.y = Math.random() * app.renderer.screen.height;
+                sprite.anchor.set(0.5);
+                //Randomly scaling the bricks
+                const scale = Math.random() * 0.5 + 0.5; 
+                sprite.scale.set(0.25*scale);
+                //velocity
+                sprite.vx = (Math.random() - 0.5) * 2; 
+                sprite.vy = (Math.random() - 0.5) * 2;
+                //target opacity
+                sprite.currentAlpha = Math.random();
+                sprite.targetAlpha = sprite.currentAlpha; 
+                sprites.push(sprite);
+                spriteContainer.addChild(sprite);
+            }
 
-            var fireworksShown = true;
-            document.getElementById("startButton").style.display = "none"; // Hide the button
+            function update() {
+                sprites.forEach(sprite => {
+                    const maxChange = 0.08; 
+                    // Update position
+                    sprite.x += sprite.vx;
+                    sprite.y += sprite.vy;
 
-            var countdownInterval = setInterval(function () {
-                countdownElement.style.display = "block";
-                countdownElement.textContent = count;
-                count--;
-                if (count <= 0) {
-                    clearInterval(countdownInterval);
-                    countdownElement.style.display = "none";
-                    document.body.classList.add("white-background");
+                    if (sprite.x > app.renderer.screen.width) {
+                        sprite.x = 0;
+                    }
+                    if (sprite.x < 0) {
+                        sprite.x = app.renderer.screen.width;
+                    }
+                    if (sprite.y > app.renderer.screen.height) {
+                        sprite.y = 0;
+                    }
+                    if (sprite.y < 0) {
+                        sprite.y = app.renderer.screen.height;
+                    }
 
-                    taulovMessage.style.display = "block";
-                    fireworks.start();
-                    setTimeout(function(){
-                        fireworks.stop();
-                        taulovMessage.style.display = "none";
-                        showParticles();
-                    },10000);
-                    
-                } else {
-                    countdownElement.textContent = count;
+                    const alphaChangeSpeed = 0.1; //opacity speed transition
+                    sprite.currentAlpha += (sprite.targetAlpha - 0.8*sprite.currentAlpha) * alphaChangeSpeed;
+                    sprite.alpha = 0.8*sprite.currentAlpha;
+                    //Randomly change opacity
+                    if (Math.random() < 0.01) { 
+                        sprite.targetAlpha = Math.random(); 
+                    }
+                });
+                
+            }
 
-                }
-
-            }, 1000);
-
-            
-        }
-
-        function showParticles() {
-            tsParticles.load("particles-js",
-                options = {
-                    "particles": {
-                        "number": {
-                            "value": 100,
-                            "density": {
-                                "enable": true,
-                                "value_area": 800
-                            }
-                        },
-                        "color": {
-                            "value": ["#ffffff", "#008000", "ffff00", "#0000ff", "#ff0000"]
-                        },
-                        "shape": {
-                            "type": "images",
-                            "stroke": {
-                                "width": 0,
-                                "color": "#000000"
-                            },
-                            "polygon": {
-                                "nb_sides": 5
-                            },
-                            "images": [
-                                {
-                                    "src": "lego-bricks/blue_moon.png",
-                                    "width": 100, // Adjust these dimensions as needed
-                                    "height": 100 // Adjust these dimensions as needed
-                                },
-                                {
-                                    "src": "lego-bricks/red_circle.png",
-                                    "width": 100,
-                                    "height": 100
-                                },
-                                {
-                                    "src": "lego-bricks/green_circle.png",
-                                    "width": 100,
-                                    "height": 100
-                                },
-                                {
-                                    "src": "lego-bricks/yellow_brick.png",
-                                    "width": 100,
-                                    "height": 100
-                                },
-                                {
-                                    "src": "lego-bricks/violet_rect.png",
-                                    "width": 100,
-                                    "height": 100
-                                },
-                                {
-                                    "src": "lego-bricks/yellow_rect.png",
-                                    "width": 100,
-                                    "height": 100
-                                },
-
-
-                            ]
-                        },
-                        "opacity": {
-                            "value": 0.7,
-                            "random": false,
-                            "anim": {
-                                "enable": false,
-                                "speed": 1,
-                                "opacity_min": 0.1,
-                                "sync": false
-                            }
-                        },
-                        "size": {
-                            "value": 20,
-                            "random": true,
-                            "anim": {
-                                "enable": false,
-                                "speed": 80,
-                                "size_min": 2,
-                                "sync": false
-                            }
-                        },
-                        "line_linked": {
-                            "enable": false,
-                            "distance": 300,
-                            "color": "#ffffff",
-                            "opacity": 0.4,
-                            "width": 2
-                        },
-                        "move": {
-                            "enable": true,
-                            "speed": 12,
-                            "direction": "none",
-                            "random": true,
-                            "straight": false,
-                            "out_mode": "out",
-                            "bounce": false,
-                            "attract": {
-                                "enable": false,
-                                "rotateX": 600,
-                                "rotateY": 1200
-                            }
-                        }
-                    },
-                    "interactivity": {
-                        "detect_on": "canvas",
-                        "events": {
-                            "onhover": {
-                                "enable": true,
-                                "mode": "bubble"
-                            },
-                            "onclick": {
-                                "enable": true,
-                                "mode": "push"
-                            },
-                            "resize": true
-                        },
-                        "modes": {
-                            "grab": {
-                                "distance": 800,
-                                "line_linked": {
-                                    "opacity": 1
-                                }
-                            },
-                            "bubble": {
-                                "distance": 180,
-                                "size": 80,
-                                "duration": 2,
-                                "opacity": 0.8,
-                                "speed": 3
-                            },
-                            "repulse": {
-                                "distance": 400,
-                                "duration": 0.4
-                            },
-                            "push": {
-                                "particles_nb": 4
-                            },
-                            "remove": {
-                                "particles_nb": 2
-                            }
-                        }
-                    },
-                    "retina_detect": true,
-                    "fps_limit": 60,
-                    "auto_play": true
-                }
-            );
-        }
-    </script>
-
-
+            app.ticker.add(update);
+        });
     </script>
 </body>
-
-
-
 </html>
