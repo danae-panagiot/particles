@@ -56,7 +56,13 @@
 
     }
 
-    #startButton {
+    .timer {
+        margin-top: 10px;
+        width: 200px;
+        height: 200px;
+    }
+
+    .timer-button {
         width: 200px;
         height: 200px;
         border-radius: 50%;
@@ -65,7 +71,6 @@
         font-size: 24px;
         font-weight: bold;
         text-align: center;
-        text-decoration: none;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -74,36 +79,63 @@
         outline: none;
         box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
         transition: all 0.3s ease-in-out;
-        z-index: 2;
         position: relative;
-
-
+        overflow: hidden;
+        z-index: 2;
     }
 
-    #startButton::before {
-        content: '';
+    .timer-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: all 0.5s ease-in-out;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+.timer-button:hover {
+    background-color: #eb6f6f;
+    transform: scale(1.1);
+    z-index: 2;
+}
+
+.timer-button:hover::before {
+    transform: translate(-50%, -50%) scale(3);
+}
+
+    .timer-button svg {
+        width: 100%;
+        height: 100%;
         position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 300%;
-        height: 300%;
-        background-color: rgba(255, 255, 255, 0.2);
-        transition: all 0.5s ease-in-out;
-        border-radius: 50%;
-        transform: translate(-50%, -50%) scale(0);
+        top: 0;
+        left: 0;
     }
 
-    #startButton:hover {
-        background-color: #eb6f6f;
-        transform: scale(1.1);
-        z-index: 2;
-
+    .timer-button circle {
+    fill: none;
+    stroke-width: 10;
+    stroke: rgba(255, 0, 0); 
+    transition: stroke 0.5s ease;
     }
 
-    #startButton span {
-        position: relative;
-        z-index: 2;
+  
+
+
+    #timeLeft {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+   
     }
+
+
+
+
 
     #countdown {
         font-size: 48px;
@@ -188,26 +220,28 @@
     }
 
     @keyframes floatAnimation {
-    0% {
-        transform: translate(0, 0);
-    }
-    25% {
-        transform: translate(calc(-10vw), calc(10vh));
-    }
-    50% {
-        transform: translate(calc(10vw), calc(10vh));
-    }
-    75% {
-        transform: translate(calc(10vw), calc(-10vh));
-    }
-    100% {
-        transform: translate(calc(-10vw), calc(-10vh));
-    }
+        0% {
+            transform: translate(0, 0);
+        }
+
+        25% {
+            transform: translate(calc(-10vw), calc(10vh));
+        }
+
+        50% {
+            transform: translate(calc(10vw), calc(10vh));
+        }
+
+        75% {
+            transform: translate(calc(10vw), calc(-10vh));
+        }
+
+        100% {
+            transform: translate(calc(-10vw), calc(-10vh));
+        }
 
 
-}
-
-    
+    }
 </style>
 
 <body>
@@ -216,7 +250,15 @@
         <div id="particles-js"></div>
     </div>
     <div id="imageGallery"></div>
-    <button id="startButton" onclick="startCountdown()">Press Me</button>
+    <button id="timerButton" class="timer-button" onclick="startCountdown()" >
+        <svg viewBox="0 0 200 200">
+            <circle cx="50%" cy="50%" r="90" />
+            <circle id="progressCircle" cx="50%" cy="50%" r="90" stroke-dasharray="565.48" stroke-dashoffset="0" />
+            <text id="timeLeft" x="50%" y="50%" text-anchor="middle" >
+                Press Me!
+            </text>
+        </svg>
+    </button>
     <div id="countdown"></div>
     <div id="fireworks-container"></div>
     <div id="taulovMessage" style="display: none;">Taulov is succesfully shut down!</div>
@@ -240,30 +282,37 @@
             var animationDuration = 5;
             var particlesContainer = document.getElementById("particles-container");
             function startCountdown() {
-                var container = document.getElementById("fireworks-container");
-                var particlesContainer = document.getElementById("particles-js");
+                var buttonElement = document.getElementById("timerButton");
+                var progressCircle = document.getElementById("progressCircle");
+                var countdownText = document.getElementById("timeLeft");
+                const fireworksContainer = document.getElementById("fireworks-container");
+                //const timerCircle = timerElement.querySelector('svg > circle + circle');
+                //timerElement.classList.add('animatable');
+                //timerCircle.style.strokeDashoffset = 1;
+                var totalTime = 10; // Total time in seconds
+                var timeLeft = totalTime;
+                const radius = progressCircle.r.baseVal.value;
+                const circumference = 2 * Math.PI * radius;
+                progressCircle.style.strokeDasharray = circumference;
+                progressCircle.style.stroke = "red";
+                progressCircle.style.strokeOpacity = 1; // Initial opacity
+                //progressCircle.style.stroke = "blue";
+                const interval = setInterval(function () {
+                    timeLeft--;
+                    countdownText.textContent = timeLeft;
+                    var percentage = (timeLeft / totalTime);
+                    const offset = circumference * (1 - percentage);
+                    progressCircle.style.strokeDashoffset = offset;
+                    const opacity = 1 - percentage; // Opacity decreases as time decreases
+                    progressCircle.style.strokeOpacity = opacity;
+                    progressCircle.style.stroke = "white";
+                    
 
-                const fireworks = new Fireworks(container, {
-                    delay: { min: 10, max: 15 },
-                    trace: 5,
-                    speed: 0.5,
-                    particles: 200,
-                });
-                var countdownElement = document.getElementById("countdown");
-                var buttonElement = document.getElementById("startButton");
-                var count = 10;
 
-                var fireworksShown = true;
-                document.getElementById("startButton").style.display = "none"; // Hide the button
-
-                var countdownInterval = setInterval(function () {
-                    countdownElement.style.display = "block";
-                    countdownElement.textContent = count;
-                    count--;
-                    if (count <= 0) {
-                        clearInterval(countdownInterval);
-                        countdownElement.style.display = "none";
+                    if (timeLeft <= 0) {
+                        clearInterval(interval);
                         document.body.classList.add("white-background");
+                        buttonElement.style.display = "none"; // Hide the button
                         taulovMessage.style.display = "block";
                         fireworks.start();
                         particlesContainer.style.opacity = 0;
@@ -286,13 +335,10 @@
                             particlesContainer.style.opacity = 1;
                             showParticles(true);
                         }, 10000);
-                    } else {
-                        countdownElement.textContent = count;
                     }
-
                 }, 1000);
-
             }
+
 
 
             function showParticles(trigger) {
@@ -441,8 +487,8 @@
                 }
             }
 
-            document.getElementById("startButton").addEventListener("click", startCountdown);
-            showParticles(true); 
+            document.getElementById("timerButton").addEventListener("click", startCountdown);
+            showParticles(true);
         }
 
         function loadImages(images) {
@@ -460,7 +506,7 @@
                 gallery.appendChild(img);
             });
 
-            
+
             gallery.addEventListener('click', function (event) {
                 if (event.target && event.target.classList.contains('image-container')) {
                     document.querySelectorAll('.image-container').forEach((image) => {

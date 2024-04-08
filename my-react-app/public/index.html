@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      #pixi-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1; /* Ensure it's behind other content */
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <canvas id="pixi-container"></canvas>
+  </body>
+</html>
